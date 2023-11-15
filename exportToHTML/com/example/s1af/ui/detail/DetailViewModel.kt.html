@@ -1,0 +1,69 @@
+<html>
+<head>
+<title>DetailViewModel.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+DetailViewModel.kt</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.s1af.ui.detail</span>
+
+<span class="s1">import android.content.ContentValues</span>
+<span class="s1">import android.util.Log</span>
+<span class="s1">import androidx.lifecycle.LiveData</span>
+<span class="s1">import androidx.lifecycle.MutableLiveData</span>
+<span class="s1">import androidx.lifecycle.ViewModel</span>
+<span class="s1">import com.bumptech.glide.Glide</span>
+<span class="s1">import com.example.s1af.data.response.DetailUserResponse</span>
+<span class="s1">import com.example.s1af.data.retrofit.ApiConfig</span>
+<span class="s1">import com.example.s1af.data.retrofit.ApiService</span>
+<span class="s1">import retrofit2.Call</span>
+<span class="s1">import retrofit2.Callback</span>
+<span class="s1">import retrofit2.Response</span>
+
+<span class="s0">class </span><span class="s1">DetailViewModel : ViewModel() {</span>
+
+    <span class="s0">val </span><span class="s1">detail = MutableLiveData&lt;DetailUserResponse&gt;()</span>
+
+    <span class="s1">private </span><span class="s0">val </span><span class="s1">_isLoading1 = MutableLiveData&lt;Boolean&gt;()</span>
+    <span class="s0">val </span><span class="s1">isLoading1: LiveData&lt;Boolean&gt; = _isLoading1</span>
+
+    <span class="s0">fun </span><span class="s1">detailUser(username: String){</span>
+        <span class="s1">_isLoading1.value = </span><span class="s0">true</span>
+        <span class="s0">val </span><span class="s1">apiService = ApiConfig.getApiService()</span>
+        <span class="s0">val </span><span class="s1">call = apiService.getDetailUser(username)</span>
+        <span class="s1">call.enqueue(</span><span class="s0">object</span><span class="s1">: Callback&lt;DetailUserResponse&gt; {</span>
+            <span class="s1">override </span><span class="s0">fun </span><span class="s1">onResponse(</span>
+                <span class="s1">call: Call&lt;DetailUserResponse&gt;</span><span class="s0">,</span>
+                <span class="s1">response: Response&lt;DetailUserResponse&gt;</span>
+            <span class="s1">) {</span>
+                <span class="s1">_isLoading1.value = </span><span class="s0">false</span>
+                <span class="s0">if </span><span class="s1">(response.isSuccessful) {</span>
+                    <span class="s0">val </span><span class="s1">data = response.body()</span>
+                    <span class="s1">detail.value = data</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+                <span class="s1">override </span><span class="s0">fun </span><span class="s1">onFailure(call: Call&lt;DetailUserResponse&gt;</span><span class="s0">, </span><span class="s1">t: Throwable) {</span>
+                    <span class="s1">Log.e(ContentValues.TAG</span><span class="s0">, </span><span class="s2">&quot;onFailure: </span><span class="s0">${</span><span class="s1">t.message</span><span class="s0">}</span><span class="s2">&quot;</span><span class="s1">)</span>
+                <span class="s1">}</span>
+            <span class="s1">})</span>
+
+        <span class="s1">}</span>
+
+    <span class="s0">fun </span><span class="s1">getDetailUser() : LiveData&lt;DetailUserResponse&gt; {</span>
+        <span class="s0">return </span><span class="s1">detail</span>
+    <span class="s1">}</span>
+
+<span class="s1">}</span>
+
+</pre>
+</body>
+</html>
